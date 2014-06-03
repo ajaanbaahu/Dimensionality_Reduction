@@ -16,9 +16,7 @@ with open('Train.csv') as f:
 
 
 
-data_small=data_training[:,0:2000]-1
-
-# print np.shape(data_small)
+data_small=data_training-1
 
 
 ########################################################################
@@ -28,10 +26,6 @@ pl.figure(1)
 pl.clf()
 
 X_indices=np.arange(data_small.shape[-1])
-
-# X_add=np.ones((X_indices))
-
-# print np.shape(X_add)
 
 
 #################################################################
@@ -63,26 +57,24 @@ pl.bar(X_indices-.25,svm_weights,width=.2,label='SVM weight',color='r')
 clf_selected=svm.SVC(kernel='linear')
 clf_selected.fit(selector.transform(data_small),data_label)
 
-svm_weights_selected=(clf_selected.coef_**2)#.sum(axis=0)
+svm_weights_selected=(clf_selected.coef_**2).sum(axis=0)
 
-#svm_weights_selected /= svm_weights_selected.max()
+svm_weights_selected /= svm_weights_selected.max()
 
-# pl.bar(X_indices[selector.get_support()] - 0.5, svm_weights_selected,width=.2, label='SVM weights after selection', color='g')
-# #
-# pl.title("Comparing feature selection")
-# pl.xlabel('Feature number')
-# pl.yticks(())
-# pl.axis('tight')
-# pl.legend(loc='upper right')
-# pl.show()
+pl.bar(X_indices[selector.get_support()] - 0.5, svm_weights_selected,width=.2, label='SVM weights after selection', color='g')
 #
-# #result=svm_weights_selected.argsort()
-# result= (sorted(zip(((svm_weights_selected)),X_indices[selector.get_support()]))[-5:])
-#
-# toc=time.time()-tic
-# np.set_printoptions(suppress=True)
+pl.title("Comparing feature selection")
+pl.xlabel('Feature number')
+pl.yticks(())
+pl.axis('tight')
+pl.legend(loc='upper right')
+pl.show()
 
-#print result
+result= (sorted(zip(((svm_weights_selected)),X_indices[selector.get_support()]))[-5:])
 
-print np.shape(svm_weights_selected)
+toc=time.time()-tic
+np.set_printoptions(suppress=True)
+
+print result
+
 
